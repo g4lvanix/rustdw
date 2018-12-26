@@ -5,8 +5,8 @@ extern crate rand;
 use rand::prelude::*;
 use rand::distributions::Uniform;
 
-use std::fs::File;
-use std::io::prelude::*;
+use std::fs;
+use std::process;
 
 fn main() {
 
@@ -35,7 +35,10 @@ fn main() {
      let mut rng = thread_rng();
 
      let length: usize = matches.value_of("length").unwrap()
-                         .parse().expect("Invalid passphrase length specified");
+                         .parse().unwrap_or_else(|e| {
+                             println!("Error parsing passphrase length: {}", e);
+                             process::exit(1);
+                         });
      
      let passphrase: String;
 
@@ -49,9 +52,10 @@ fn main() {
      } else {
           let fname = matches.value_of("file").unwrap();
 
-          let mut file = File::open(fname).unwrap();
-          let mut contents = String::new();
-          file.read_to_string(&mut contents).unwrap();
+          let contents = fs::read_to_string(fname).unwrap_or_else(|e| {
+              println!("Error reading wordlist: {}", e);
+              process::exit(1);
+          });
           
           let words: Vec<&str> = contents.split_whitespace()
                               .filter(|x| {!x.chars().all(char::is_numeric)})
@@ -66,5 +70,5 @@ fn main() {
                          .join(" ");          
      }
 
-     println!("{:}", passphrase);
+     println!("{}", passphrase);
 }
