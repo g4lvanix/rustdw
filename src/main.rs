@@ -39,16 +39,14 @@ fn main() {
                              println!("Error parsing passphrase length: {}", e);
                              process::exit(1);
                          });
-     
-     let passphrase: String;
 
-     if matches.is_present("p") {
+     let passphrase = if matches.is_present("p") {
           let dist = Uniform::from(0..10);
-          passphrase = dist.sample_iter(&mut rng)
-                         .take(length)
-                         .map(|x| x.to_string())
-                         .collect::<Vec<String>>()
-                         .join("");
+          dist.sample_iter(&mut rng)
+               .take(length)
+               .map(|x| x.to_string())
+               .collect::<Vec<String>>()
+               .join("")
      } else {
           let fname = matches.value_of("file").unwrap();
 
@@ -63,12 +61,12 @@ fn main() {
           
           let dist = Uniform::from(0..words.len());
 
-          passphrase = dist.sample_iter(&mut rng)
-                         .take(length)
-                         .map(|i| words[i])
-                         .collect::<Vec<&str>>()
-                         .join(" ");          
-     }
+          dist.sample_iter(&mut rng)
+               .take(length)
+               .map(|i| words[i])
+               .collect::<Vec<&str>>()
+               .join(" ")         
+     };
 
      println!("{}", passphrase);
 }
