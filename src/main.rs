@@ -19,7 +19,7 @@ fn main() {
                          .conflicts_with("file")
                          .takes_value(true)
                          .possible_values(&Wordlist::variants())
-                         .default_value("large"))
+                         .default_value(Wordlist::variants()[0]))
                     .arg(Arg::with_name("length")
                          .short("l")
                          .help("Length of the generated password or pin")
