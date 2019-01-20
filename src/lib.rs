@@ -56,7 +56,7 @@ pub fn run(matches: ArgMatches) -> String {
     }
 }
 
-fn generate_pin<R: Rng>(mut rng: R, length: usize) -> String {
+fn generate_pin<R: CryptoRng + RngCore>(mut rng: R, length: usize) -> String {
     let dist = Uniform::from(0..10);
     dist.sample_iter(&mut rng)
         .take(length)
@@ -65,7 +65,7 @@ fn generate_pin<R: Rng>(mut rng: R, length: usize) -> String {
         .join("")
 }
 
-fn generate_passphrase<R: Rng>(mut rng: R, length: usize, words: &[&str]) -> String {
+fn generate_passphrase<R: CryptoRng + RngCore>(mut rng: R, length: usize, words: &[&str]) -> String {
     let dist = Uniform::from(0..words.len());
     dist.sample_iter(&mut rng)
         .take(length)
