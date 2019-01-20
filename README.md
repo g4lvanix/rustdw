@@ -5,7 +5,7 @@ passhphrases based on the [diceware technique](http://world.std.com/~reinhold/di
 The Electronic Frontier Foundation (EFF) has a great article on [how this technique works](https://www.eff.org/dice).
 
 `rustdw` uses a cryptographically secure random number generator provided by the 
-[`rand crate`](https://docs.rs/rand) to pick random words from the word list. 
+[`rand`](https://docs.rs/rand) crate to pick random words from the word list. 
 The words are chosen according to a unifom distribution (every word is equally likely to be chosen).
 
 ## Installation
@@ -15,7 +15,7 @@ After [installing rust](https://www.rust-lang.org/tools/install), clone the repo
 ```
 $ git clone github.com/g4lvanix/rustdw
 $ cd rustdw
-rustdw $ cargo build --release
+$ cargo build --release
 ```
 
 ## Usage 
@@ -44,26 +44,43 @@ OPTIONS:
 
 ### Diceware passphrases 
 
+The entropy of the generated passhphrase (assuming selection according to uniform distribution) can be estimated as: 
+
+`S = l x log2(k)` bits
+
+where `k` is the number of words in the wordlist and `l` is the number of chosen words.
+
 #### Included wordlists 
 
-rustdw includes three [word lists published by the EFF](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases).
+`rustdw` includes three [word lists published by the EFF](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). 
+Please refer to the linked page for a discussion of tradeoffs in selecting the 
+ordlist and explanations on the cryptographic strength of the resulting passphrases.
 
-To generate a 5 word long passhphrase with words chosen from EFFs large wordlist (included with rustdw):
+| Argument | Generated from               | Number of words | Entropy per word (bits) |
+| -------- | ---------------------------- | --------------- | ----------------------- |
+| `large`  | `eff_large_wordlist.txt`     | 7776            | 12.9                    |
+| `short1` | `eff_short_wordlist_1.txt`   | 1296            | 10.3                    |
+| `short2` | `eff_short_wordlist_2_0.txt` | 1296            | 10.3                    |
+
+At the time of this writing, using 6 words from the `large` wordlist (77 bits entropy) 
+or 7 words from the `short1` wordlist (72 bits entropy) are recommended by the EFF. 
+
+To generate a 7 word long passhphrase with words chosen from EFFs large wordlist:
 
 ```
-$ ./rustdw -l 5
+$ ./rustdw -l 7
 ```
 
-To use the EFF short word list (included with rustdw):
+To use the EFF short word list:
 
 ```
-$ ./rustdw -l 5 -w short1
+$ ./rustdw -l 7 -w short1
 ```
 
-To use the EFF short words with unique prefixes list (included in rustdw):
+To use the EFF short words with unique prefixes list:
 
 ```
-$ ./rustdw -l 5 -w short2
+$ ./rustdw -l 7 -w short2
 ```
 
 #### Wordlists from other sources
