@@ -6,7 +6,8 @@ use rand::distributions::Uniform;
 extern crate clap;
 use clap::ArgMatches;
 
-use std::fs;
+use std::fs::File;
+use std::io::{BufReader, BufRead, Result};
 use std::process;
 
 arg_enum!{
@@ -32,19 +33,14 @@ pub fn run(matches: ArgMatches) -> String {
     } else if matches.is_present("file") {
         let fname = matches.value_of("file").unwrap();
 
-        let contents = fs::read_to_string(fname).unwrap_or_else(|e| {
+        let words = read_wordlist(fname).unwrap_or_else(|e| {
             println!("Error reading wordlist: {}", e);
             process::exit(1);
         });
           
-        let words: Vec<&str> = contents.split_whitespace()
-                            .filter(|x| {!x.chars().all(char::is_numeric)})
-                            .collect();
-          
-        generate_passphrase(&mut rng, length, &words)
-       
+        generate_passphrase(&mut rng, length, &words.as_slice())
     } else {
-        let wl = value_t!(matches.value_of("wordlist"), Wordlist).unwrap();
+        let wl = value_t!(matches.value_of("wordlist"), Wordlist).unwrap_or(Wordlist::large);
 
         let words = match wl {
             Wordlist::large => &EFF_LARGE_WORDLIST[..],
@@ -56,6 +52,22 @@ pub fn run(matches: ArgMatches) -> String {
     }
 }
 
+fn read_wordlist(fname: &str) -> Result<Vec<String>> {
+    let file = File::open(fname)?;
+
+    Ok(BufReader::new(file).lines()
+                .filter_map(|x| x.ok())
+                .filter_map(|x| {
+                    if let Some(k) = x.split_whitespace().rev().next()
+                    {
+                        Some(k.to_owned())
+                    } else {
+                        None
+                    }
+                })
+                .collect())
+}
+
 fn generate_pin<R: CryptoRng + RngCore>(mut rng: R, length: usize) -> String {
     let dist = Uniform::from(0..10);
     dist.sample_iter(&mut rng)
@@ -65,11 +77,15 @@ fn generate_pin<R: CryptoRng + RngCore>(mut rng: R, length: usize) -> String {
         .join("")
 }
 
-fn generate_passphrase<R: CryptoRng + RngCore>(mut rng: R, length: usize, words: &[&str]) -> String {
+fn generate_passphrase<R, T>(mut rng: R, length: usize, words: &[T]) -> String
+where
+    R: CryptoRng + RngCore,
+    T: AsRef<str>,
+{
     let dist = Uniform::from(0..words.len());
     dist.sample_iter(&mut rng)
         .take(length)
-        .map(|i| words[i])
+        .map(|i| words[i].as_ref())
         .collect::<Vec<&str>>()
         .join(" ") 
 }
