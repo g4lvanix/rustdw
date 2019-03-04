@@ -54,7 +54,7 @@ where `k` is the number of words in the wordlist and `l` is the number of chosen
 
 `rustdw` includes three [word lists published by the EFF](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). 
 Please refer to the linked page for a discussion of tradeoffs in selecting the 
-ordlist and explanations on the cryptographic strength of the resulting passphrases.
+wordlist and explanations on the cryptographic strength of the resulting passphrases.
 
 | Argument | Generated from               | Number of words | Entropy per word (bits) |
 | -------- | ---------------------------- | --------------- | ----------------------- |
