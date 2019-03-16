@@ -1,10 +1,7 @@
-extern crate rand;
 use rand::prelude::*;
 use rand::distributions::Uniform;
 
-#[macro_use]
-extern crate clap;
-use clap::ArgMatches;
+use clap::{ArgMatches, arg_enum, value_t, _clap_count_exprs};
 
 use std::fs::File;
 use std::io::{BufReader, BufRead, Result};
