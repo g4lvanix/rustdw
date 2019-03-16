@@ -1,7 +1,4 @@
-extern crate rustdw;
-use rustdw::*;
-
-extern crate clap;
+use rustdw::{run, Wordlist};
 use clap::{Arg, App, crate_version};
 
 fn main() {
