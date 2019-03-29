@@ -23,23 +23,38 @@ $ cargo build --release
 Run `rustdw --help` for usage info.
 
 ```
-rustdw 0.2
+rustdw 0.2.0
 g4lvanix <elia@dl1ye.com>
 Create diceware passwords and numeric pins
+
+    Copyright (C) 2019 Yuma Ritterbusch 
+    This program comes with ABSOLUTELY NO WARRANTY.
+    This is free software, and you are welcome to redistribute it
+    under certain conditions; see `rustdw --version` for details.
 
 USAGE:
     rustdw [FLAGS] [OPTIONS]
 
 FLAGS:
-    -h, --help       Prints help information
-    -p               Generate a numeric pin insted of diceware passphrase
-    -V, --version    Prints version information
+    -h, --help       
+            Prints help information
+
+    -p               
+            Generate a numeric pin insted of diceware passphrase
+
+    -V, --version    
+            Prints version information
+
 
 OPTIONS:
-    -f <file>            Name of external diceware wordlist file
-    -l <length>          Length of the generated password or pin [default: 6]
-    -w <wordlist>        Use one of the internal wordlists [default: large]  [possible values: large, short1, short2]
+    -f <file>            
+            Name of external diceware wordlist file
 
+    -l <length>          
+            Length of the generated password or pin [default: 6]
+
+    -w <wordlist>        
+            Use one of the internal wordlists [default: efflarge] [possible values: efflarge, effshort1, effshort2]
 ```
 
 ## Diceware passphrases 
