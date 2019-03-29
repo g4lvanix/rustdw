@@ -70,11 +70,11 @@ where `k` is the number of words in the wordlist and `l` is the number of chosen
 `rustdw` includes three [word lists published by the EFF](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). Please refer to the linked page for a discussion of tradeoffs in selecting the 
 wordlist and explanations on the cryptographic strength of the resulting passphrases.
 
-| Argument | Generated from               | Number of words | Entropy per word (bits) |
-| -------- | ---------------------------- | --------------- | ----------------------- |
-| `large`  | `eff_large_wordlist.txt`     | 7776            | 12.9                    |
-| `short1` | `eff_short_wordlist_1.txt`   | 1296            | 10.3                    |
-| `short2` | `eff_short_wordlist_2_0.txt` | 1296            | 10.3                    |
+| Argument    | Generated from               | Number of words | Entropy per word (bits) |
+| ----------- | ---------------------------- | --------------- | ----------------------- |
+| `efflarge`  | `eff_large_wordlist.txt`     | 7776            | 12.9                    |
+| `effshort1` | `eff_short_wordlist_1.txt`   | 1296            | 10.3                    |
+| `effshort2` | `eff_short_wordlist_2_0.txt` | 1296            | 10.3                    |
 
 At the time of this writing, using 6 words from the `large` wordlist (77 bits entropy) 
 or 7 words from the `short1` wordlist (72 bits entropy) are recommended by the EFF. 
@@ -88,16 +88,14 @@ $ ./rustdw -l 7
 To use the EFF short word list:
 
 ```
-$ ./rustdw -l 7 -w short1
+$ ./rustdw -l 7 -w effshort1
 ```
 
 To use the EFF short words with unique prefixes list:
 
 ```
-$ ./rustdw -l 7 -w short2
+$ ./rustdw -l 7 -w effshort2
 ```
-
-### BIP39 wordlist
 
 ### Wordlists from other sources
 
