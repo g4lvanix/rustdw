@@ -42,7 +42,7 @@ OPTIONS:
 
 ```
 
-### Diceware passphrases 
+## Diceware passphrases 
 
 The entropy of the generated passhphrase (assuming selection according to uniform distribution) can be estimated as: 
 
@@ -50,10 +50,9 @@ The entropy of the generated passhphrase (assuming selection according to unifor
 
 where `k` is the number of words in the wordlist and `l` is the number of chosen words.
 
-#### Included wordlists 
+### EFF wordlists 
 
-`rustdw` includes three [word lists published by the EFF](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). 
-Please refer to the linked page for a discussion of tradeoffs in selecting the 
+`rustdw` includes three [word lists published by the EFF](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). Please refer to the linked page for a discussion of tradeoffs in selecting the 
 wordlist and explanations on the cryptographic strength of the resulting passphrases.
 
 | Argument | Generated from               | Number of words | Entropy per word (bits) |
@@ -83,7 +82,9 @@ To use the EFF short words with unique prefixes list:
 $ ./rustdw -l 7 -w short2
 ```
 
-#### Wordlists from other sources
+### BIP39 wordlist
+
+### Wordlists from other sources
 
 It is possible to use a word list that is not included in rustdw, for example the
 [original diceware list](http://world.std.com/~reinhold/diceware.html) created by Arnold G. Reinhold.
@@ -102,7 +103,7 @@ The external word list can be specified like this
 $ ./rustdw -f external_wordlist.txt -l 5
 ```
 
-### Numeric PINs
+## Numeric PINs
 
 `rustdw` can also create numeric passwords for use as a PIN (personal identification number). 
 
@@ -115,3 +116,10 @@ $ ./rustdw -p -l 4
 ## Notes 
 
 [Relevant xkcd](https://www.xkcd.com/936/)
+
+## License
+
+The source code of `rustdw` is published under the GNU GPLv3, see LICENSE for details.
+
+`rustdw` further includes the following word lists:
+- three [word lists published by the EFF](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases) under the terms of the [Creative Commons Attribution License](https://creativecommons.org/licenses/by/3.0/us/)
