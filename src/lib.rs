@@ -13,7 +13,11 @@ arg_enum!{
         efflarge,
         effshort1,
         effshort2,
-    }
+        bip39en,
+        bip39es,
+        bip39fr,
+        bip39it,
+   }
 }
 
 pub fn run(matches: ArgMatches) -> String {
@@ -43,7 +47,12 @@ pub fn run(matches: ArgMatches) -> String {
             Wordlist::efflarge => eff_wordlist(include_str!("lists/eff/eff_large_wordlist.txt")),
             Wordlist::effshort1 => eff_wordlist(include_str!("lists/eff/eff_short_wordlist_1.txt")),
             Wordlist::effshort2 => eff_wordlist(include_str!("lists/eff/eff_short_wordlist_2_0.txt")),
-        };
+
+            Wordlist::bip39en => bip39_wordlist(include_str!("lists/bip39/english.txt")),
+            Wordlist::bip39es => bip39_wordlist(include_str!("lists/bip39/spanish.txt")),
+            Wordlist::bip39fr => bip39_wordlist(include_str!("lists/bip39/french.txt")),
+            Wordlist::bip39it => bip39_wordlist(include_str!("lists/bip39/italian.txt")),
+       };
 
         generate_passphrase(&mut rng, length, &words)
     }
@@ -90,5 +99,10 @@ where
 fn eff_wordlist(string: &'static str) -> Vec<&'static str> {
     string.split_whitespace()
     .filter(|x| x.chars().all(char::is_alphabetic))
+    .collect()
+}
+
+fn bip39_wordlist(string: &'static str) -> Vec<&'static str> {
+    string.split_whitespace()
     .collect()
 }
