@@ -23,14 +23,35 @@ arg_enum!{
 pub fn run(matches: ArgMatches) -> String {
     let mut rng = thread_rng();
 
+    // this only fails when the user provides a bad input
+    // the main takes care of providing a default value 
+    // if not specified by the user
     let length: usize = matches.value_of("length").unwrap()
                         .parse().unwrap_or_else(|e| {
                             println!("Error parsing passphrase length: {}", e);
                             process::exit(1);
                         });
 
+    // the entropy option excludes the length option using clap
+    // this way as soon as entropy is present we can ignore the
+    // previously parsed length as it is just the default value
+    let entropy = if matches.is_present("entropy") {
+        Some(matches.value_of("entropy").unwrap()
+                .parse().unwrap_or_else(|e| {
+                    println!("Error parsing entropy: {}", e);
+                    process::exit(1);
+                }))
+    } else {
+        None
+    };
+
     if matches.is_present("p") {
-        generate_pin(&mut rng, length)
+        let elements = if let Some(e) = entropy {
+            minimum_elements(e, 10)
+        } else {
+            length
+        };
+        generate_pin(&mut rng, elements)
     } else if matches.is_present("file") {
         let fname = matches.value_of("file").unwrap();
 
@@ -38,8 +59,14 @@ pub fn run(matches: ArgMatches) -> String {
             println!("Error reading wordlist: {}", e);
             process::exit(1);
         });
+
+        let elements = if let Some(e) = entropy {
+            minimum_elements(e, words.len())
+        } else {
+            length
+        };
           
-        generate_passphrase(&mut rng, length, &words.as_slice())
+        generate_passphrase(&mut rng, elements, &words.as_slice())
     } else {
         let wl = value_t!(matches.value_of("wordlist"), Wordlist).unwrap_or(Wordlist::efflarge);
 
@@ -54,7 +81,13 @@ pub fn run(matches: ArgMatches) -> String {
             Wordlist::bip39it => bip39_wordlist(include_str!("lists/bip39/italian.txt")),
        };
 
-        generate_passphrase(&mut rng, length, &words)
+        let elements = if let Some(e) = entropy {
+            minimum_elements(e, words.len())
+        } else {
+            length
+        };
+
+        generate_passphrase(&mut rng, elements, &words)
     }
 }
 
@@ -105,4 +138,8 @@ fn eff_wordlist(string: &'static str) -> Vec<&'static str> {
 fn bip39_wordlist(string: &'static str) -> Vec<&'static str> {
     string.split_whitespace()
     .collect()
+}
+
+fn minimum_elements(entropy: usize, collection_size: usize) -> usize {
+    ((entropy as f64) / (collection_size as f64).log2()).ceil() as usize
 }
